@@ -1,13 +1,10 @@
 EGO = "Me"
 
 PEOPLE = [
-    ("Alice", "friend"),
-    ("Bob", "work"),
-    ("Charlie", "family"),
-    ("Diana", "romantic"),
-    ("Eve", "friend"),
-    ("Frank", "work"),
-    ("Grace", "friend"),
+    ("Андрей Коробенков", "friend"),
+    ("Александр Мартынов", "friend"),
+    ("Евгений Самигуллин", "work"),
+    ("Евгений Бурлаков", "work"),
 ]
 
 
@@ -18,13 +15,14 @@ def group(members, relation):
         "relation": relation,
     }
 
+
 RELATIONS_BETWEEN_OTHERS = [
     group(
-        ["Alice", "Bob", "Charlie", "Diana"],
+        ["Евгений Самигуллин", "Евгений Бурлаков"],
         relation="work"
     ),
     group(
-        ["Eve", "Frank", "Grace"],
+        ["Андрей Коробенков", "Александр Мартынов"],
         relation="friends"
     ),
 ]

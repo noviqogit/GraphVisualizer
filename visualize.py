@@ -63,6 +63,27 @@ def visualize_ego_3d(graph, pos):
     fig = go.Figure(data=[edges, nodes])
     fig.update_layout(
         showlegend=False,
-        margin=dict(l=0, r=0, t=0, b=0)
+        margin=dict(l=0, r=0, t=0, b=0),
+        scene=dict(
+            xaxis=dict(
+                visible=False,
+                showgrid=False,
+                zeroline=False,
+                showticklabels=False,
+            ),
+            yaxis=dict(
+                visible=False,
+                showgrid=False,
+                zeroline=False,
+                showticklabels=False,
+            ),
+            zaxis=dict(
+                visible=False,
+                showgrid=False,
+                zeroline=False,
+                showticklabels=False,
+            ),
+            bgcolor="rgba(0,0,0,0)",
+        ),
     )
     fig.show()
