@@ -1,7 +1,8 @@
 id,name,group
-me,Александр,self
-p1,Иван,work
-p2,Мария,friends
-p3,Олег,family
-p4,Анна,work
-p5,Сергей,friends
+me, ,self
+p1,Коробенков А.,friends
+p2,Мартынов А.,friends
+p3,Самигуллин Е.,work
+p4,Громова Ю.,work
+p5,Новиков Е.,family
+p6,Новикова Т.,family

@@ -1,6 +1,10 @@
 source,target,relation_type,weight
-me,p1,work,2
-me,p2,friends,3
-me,p3,family,4
-p1,p4,work,1
-p2,p5,friends,2
+me,p1,friend,4
+me,p2,friend,2
+me,p4,work,2
+me,p3,work,2
+p1,p2,friend,4
+p3,p4,work,2
+p5,p6,family,5
+p5,me,family,5
+me,p6,family,5

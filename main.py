@@ -4,9 +4,8 @@ from graph.plot_plotly import plot_ego_graph_3d
 
 
 def main():
-    people, relations, edge_colors = load_data()
+    people, relations, _ = load_data()
     graph = build_graph(people, relations)
-
     plot_ego_graph_3d(graph, center_id="me")
 
 
