@@ -1,3 +1,4 @@
+import random
 import plotly.graph_objects as go
 
 
@@ -8,42 +9,66 @@ VERTEX_COLORS = {
     "family": "red",
 }
 
-
 EDGE_COLORS = {
     "friends": "green",
     "work": "blue",
     "family": "red",
 }
 
+DIRECTION_VECTORS = {
+    "friends": (1, 0, 0),
+    "work": (0, 1, 0),
+    "family": (0, -1, 0),
+}
+
+BASE_DISTANCE = 10
+JITTER = 3
+
 
 def plot_ego_graph_3d(g, center_id="me"):
-    # --- эго-граф
-    center = g.vs.find(id=center_id).index
-    ego = g.induced_subgraph(g.neighborhood(center, order=1))
+    center_idx = g.vs.find(id=center_id).index
+    ego = g.induced_subgraph(g.neighborhood(center_idx, order=1))
 
-    # --- 3D layout
-    layout = ego.layout("fr", dim=3)
-    coords = layout.coords
+    # координаты вручную
+    coords = []
+
+    for v in ego.vs:
+        if v["id"] == center_id:
+            coords.append((0, 0, 0))
+            continue
+
+        # ищем связь с центром
+        e = ego.es.find(_between=([v.index], [ego.vs.find(id=center_id).index]))
+        rel_type = e["relation_type"]
+
+        dx, dy, dz = DIRECTION_VECTORS.get(rel_type, (0, 0, 1))
+
+        x = dx * BASE_DISTANCE + random.uniform(-JITTER, JITTER)
+        y = dy * BASE_DISTANCE + random.uniform(-JITTER, JITTER)
+        z = dz * BASE_DISTANCE + random.uniform(-JITTER, JITTER)
+
+        coords.append((x, y, z))
+
     x, y, z = zip(*coords)
 
     # --- рёбра
-    edge_x, edge_y, edge_z, edge_color = [], [], [], []
+    edge_x, edge_y, edge_z = [], [], []
 
     for e in ego.es:
         s, t = e.tuple
-        color = EDGE_COLORS.get(e["relation_type"], "gray")
-
         edge_x += [x[s], x[t], None]
         edge_y += [y[s], y[t], None]
         edge_z += [z[s], z[t], None]
-        edge_color.append(color)
 
     edge_trace = go.Scatter3d(
         x=edge_x,
         y=edge_y,
         z=edge_z,
         mode="lines",
-        line=dict(width=4, color="gray"),
+        line=dict(
+            width=4,
+            color="gray",
+        ),
         hoverinfo="none",
     )
 
@@ -54,7 +79,7 @@ def plot_ego_graph_3d(g, center_id="me"):
     ]
 
     node_sizes = [
-        18 if v["id"] == center_id else 10
+        24 if v["id"] == center_id else 12
         for v in ego.vs
     ]
 
@@ -65,7 +90,10 @@ def plot_ego_graph_3d(g, center_id="me"):
         mode="markers+text",
         text=ego.vs["label"],
         textposition="top center",
-        hovertext=ego.vs["id"],
+        hovertext=[
+            f"id: {v['id']}<br>group: {v['group']}"
+            for v in ego.vs
+        ],
         marker=dict(
             size=node_sizes,
             color=node_colors,
@@ -73,11 +101,10 @@ def plot_ego_graph_3d(g, center_id="me"):
         ),
     )
 
-    # --- фигура
     fig = go.Figure(data=[edge_trace, node_trace])
 
     fig.update_layout(
-        title="Social Ego Graph (3D)",
+        title="Social Ego Graph (directional)",
         showlegend=False,
         scene=dict(
             xaxis=dict(visible=False),
